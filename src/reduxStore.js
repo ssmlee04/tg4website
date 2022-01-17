@@ -429,6 +429,30 @@ export const loadSampleMessages = ( fn ) => ( dispatch, getState ) => {
   } );
 }
 
+export const getChannelMessagesFn = ( msgUsers, oldUsers, msgMessages, oldMessages, isAfter, api, dispatch, fn ) => {
+  const msgUsersWithImages = msgUsers.reduce((t, d) => {
+    if (d.photo) {
+      const location = {
+        ...d.photo.photo_small,
+        // dc_id: d.photo.dc_id,
+        big: false,
+        peer: {
+          '_': 'inputPeerUser',
+          user_id: d.id,
+          access_hash: d.access_hash
+        },
+        _: "inputPeerPhotoFileLocation",
+      }
+      photoManager.lookup(d.id, location, api)
+    }
+    t[d.id] = d;
+    return t
+  }, {})
+  const users = _merge(msgUsersWithImages, oldUsers)
+  const messages = uniqBy(!isAfter ? msgMessages.reverse().concat(oldMessages) : oldMessages.concat(msgMessages.reverse()), d => d.id)
+  return { users, messages }
+}
+
 export const getChannelMessages = ( isAfter, fn ) => ( dispatch, getState ) => {
   const api = getState().telegram.api;
   const user = getState().telegram.user;
@@ -466,27 +490,7 @@ export const getChannelMessages = ( isAfter, fn ) => ( dispatch, getState ) => {
       _: "inputPeerChannel"
     }
   }).then(msg => {
-    const users = msg.users.reduce((t, d) => {
-      if (d.photo) {
-        const location = {
-          ...d.photo.photo_small,
-          // dc_id: d.photo.dc_id,
-          big: false,
-          peer: {
-            '_': 'inputPeerUser',
-            user_id: d.id,
-            access_hash: d.access_hash
-          },
-          _: "inputPeerPhotoFileLocation",
-        }
-        photoManager.lookup(d.id, location, api)
-      }
-      t[d.id] = d;
-      return t
-    }, {})
-
-    let messages = !isAfter ? msg.messages.reverse().concat(oldMessages) : oldMessages.concat(msg.messages.reverse())
-    messages = uniqBy(messages, d => d.id)
+    const { messages, users } = getChannelMessagesFn(msg.users, oldUsers, msg.messages, oldMessages, isAfter, api, dispatch, fn)
     const messagesOffsetEnd = messages[messages.length - 1].id
     const messagesOffsetStart = messages[0].id
     const hasNewMessages = hasNewMessagesOld || (isAfter && (oldMessages.length < messages.length))
