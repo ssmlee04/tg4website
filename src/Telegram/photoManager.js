@@ -58,10 +58,14 @@ const photoManager = ( () => {
       if ( map[ `${ local_id }_${ volume_id }` ] ) {
         return map[ `${ local_id }_${ volume_id }` ];
       }
-      const blob = await getBlob( location );
-      map[ `${ local_id }_${ volume_id }` ] = `data:image/jpg;base64,${ bytesToBase64( blob.bytes ) }`;
-      hasNewEntry = true;
-      return map[ `${ local_id }_${ volume_id }` ];
+      try {
+        const blob = await getBlob( location );
+        map[ `${ local_id }_${ volume_id }` ] = `data:image/jpg;base64,${ bytesToBase64( blob.bytes ) }`;
+        hasNewEntry = true;
+        return map[ `${ local_id }_${ volume_id }` ];
+      } catch(err) {
+        console.log(err)
+      }
     },
     fetch: () => {
       hasNewEntry = false;

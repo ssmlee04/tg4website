@@ -95,7 +95,7 @@ class ImStickerMessage extends React.Component {
       <a className='im_message_media'>
         <div className='im_message_photo_thumb'>
           {isWebp ? <picture>
-            <source srcset={ url } type="image/webp" />
+            <source srcSet={ url } type="image/webp" />
             <img src={ url } src={ url } style={ { width, height } } />
           </picture> : <LazyLoad><img src={ url } style={ { width, height } } /></LazyLoad>
           }
