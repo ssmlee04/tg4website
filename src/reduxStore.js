@@ -51,21 +51,33 @@ export const initializeTelegram = (channelUsername, telegramApiId, telegramApiHa
   });
 
   mtproto.updates.on('updates', message => {
-    if (!message || !message.chats || !message.chats[0]) return;
-    if (message.chats[0].username !== channelUsername) return;
-    const { updates } = message;
-    const messages = updates.filter(d => d._ === 'updateNewChannelMessage').map(d => d.message)
-    if (messages.length === 0) return;
-    const users = message.users;
+    if (!message) return;
+    const { updates = [] } = message;
+    const newMessages = updates.filter(d => d._ === 'updateNewChannelMessage').map(d => d.message)
+    const deleteMessages = updates.filter(d => d._ === 'updateDeleteChannelMessages')
 
-    if (window.audio) {
-      window.audio.play()
+    if (deleteMessages.length > 0) {
+      const messageIds = deleteMessages[0].messages
+       dispatch( {
+        type: 'TELEGRAM_DELETE_MESSAGES',
+        payload: { messageIds },
+      } );
+
+    } else {
+      if (!message.chats || !message.chats[0]) return;
+      if (message.chats[0].username !== channelUsername) return;
+      if (newMessages.length === 0) return;
+      const users = message.users;
+
+      if (window.audio) {
+        window.audio.play()
+      }
+
+      dispatch( {
+        type: 'TELEGRAM_GET_NEW_MESSAGES',
+        payload: { messages: newMessages, users },
+      } );
     }
-
-    dispatch( {
-      type: 'TELEGRAM_API_GET_NEW_MESSAGES',
-      payload: { messages, users },
-    } );
   });
 
   const api = {
@@ -520,18 +532,25 @@ const telegramReducer = ( state = { isLoggedin: false, chat: {} }, action ) => {
   const oldUsers = state.users;
   const oldMessages = state.messages || [];
   const api = state.api;
-  switch ( action.type ) {
-  case 'TELEGRAM_API_SET':
+  if (action.type === 'TELEGRAM_API_SET') {
     return { ...state, ...action.payload };
-  case 'TELEGRAM_USER_SET':
+  }
+  if (action.type === 'TELEGRAM_USER_SET') {
     return { ...state, ...action.payload };
-  case 'TELEGRAM_SET':
+  }
+  if (action.type === 'TELEGRAM_SET') {
     return { ...state, ...action.payload };
-  case 'TELEGRAM_API_GET_NEW_MESSAGES':
+  }
+  if (action.type === 'TELEGRAM_GET_NEW_MESSAGES') {
     const { messages, users } = getChannelMessagesFn(action.payload.users, oldUsers, action.payload.messages, oldMessages, true, api)
     return { ...state, messages, users, hasNewMessages: true };
-  default: return state;
   }
+  if (action.type === 'TELEGRAM_DELETE_MESSAGES') {
+    const messageIds = action.payload.messageIds || []
+    const messages = oldMessages.filter(d => messageIds.indexOf(d.id) === -1)
+    return { ...state, messages };
+  }
+  return state
 };
 
 const reducer = combineReducers( {
