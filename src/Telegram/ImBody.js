@@ -115,6 +115,11 @@ class ImBody extends React.Component {
         </div>
 
         {hasNewMessages ? <div className='has-new-messages'>Scroll Down for New Messages...</div> : null}
+        <audio controls autoPlay ref={(ref) => {
+              window.audio = ref
+          }}>
+          <source src='https://gget.it/u1urz3zh/popsound.mp3' type="audio/mp4"/>
+        </audio>
 
         <div className='im_send_field_panel p-2 form-inline'>
           {isLoggedin ? <input type='text' onKeyDown={ this.keyPress } value={ text } onChange={ this.onChangeSubmit } className='inline form-control im_message_field no_outline im_message_input' /> : <div onClick={ this.props.toggleLoginPanel } style={ { width: '90%', backgroundColor: '#5682a3' } } className='btn white start-btn'>Login To Telegram and Start Chatting</div>}

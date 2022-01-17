@@ -51,10 +51,16 @@ export const initializeTelegram = (channelUsername, telegramApiId, telegramApiHa
   });
 
   mtproto.updates.on('updates', message => {
+    if (!message || !message.chats || !message.chats[0]) return;
     if (message.chats[0].username !== channelUsername) return;
     const { updates } = message;
     const messages = updates.filter(d => d._ === 'updateNewChannelMessage').map(d => d.message)
+    if (messages.length === 0) return;
     const users = message.users;
+
+    if (window.audio) {
+      window.audio.play()
+    }
 
     dispatch( {
       type: 'TELEGRAM_API_GET_NEW_MESSAGES',
