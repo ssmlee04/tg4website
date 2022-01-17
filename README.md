@@ -6,9 +6,15 @@ Demo: https://dlp14zgm5vlk5.cloudfront.net/
 
 ![](https://i.imgur.com/bPNSFCk.png)
 
+# Prerequisite
+
+Currently we only support group chats on your website. You need to make sure the group is a public.
+
 # Installation
 
-Go to: https://my.telegram.org/apps to get and app id and app hash.
+* Go to: https://my.telegram.org/apps to get and app id and app hash.
+
+* Invite @tg4website into your group, then do `/initialize`.
 
 # Usage
 
