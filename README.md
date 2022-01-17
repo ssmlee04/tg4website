@@ -1,0 +1,20 @@
+# tg4website
+
+This help you add Telegram group chats to your website easily. You can add this to your website.
+
+```
+<script src="https://tg4website.s3.amazonaws.com/js/vendors.bundle.js"></script>
+<script src="https://tg4website.s3.amazonaws.com/js/app.bundle.js"></script>
+<script type="text/javascript">
+   Tg4Web.init('earningsfly', '17349', '344583e45741c457fe1862106095a5eb');
+</script>
+```
+
+Or you can use it as a react component by doing:
+
+```js
+import Tg4website from 'tg4website';
+import 'tg4website/App.css';
+
+<Tg4website channelUsername={'earningsfly'} telegramApiId={'17349'} telegramApiHash={'344583e45741c457fe1862106095a5eb'} />
+```
