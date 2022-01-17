@@ -452,20 +452,20 @@ export const loadSampleMessages = ( fn ) => ( dispatch, getState ) => {
 
 export const getChannelMessagesFn = ( msgUsers, oldUsers, msgMessages, oldMessages, isAfter, api ) => {
   const msgUsersWithImages = msgUsers.reduce((t, d) => {
-    if (d.photo) {
-      const location = {
-        ...d.photo.photo_small,
-        // dc_id: d.photo.dc_id,
-        big: false,
-        peer: {
-          '_': 'inputPeerUser',
-          user_id: d.id,
-          access_hash: d.access_hash
-        },
-        _: "inputPeerPhotoFileLocation",
-      }
-      photoManager.lookup(d.id, location, api)
-    }
+    // if (d.photo) {
+    //   const location = {
+    //     ...d.photo.photo_small,
+    //     // dc_id: d.photo.dc_id,
+    //     big: false,
+    //     peer: {
+    //       '_': 'inputPeerUser',
+    //       user_id: d.id,
+    //       access_hash: d.access_hash
+    //     },
+    //     _: "inputPeerPhotoFileLocation",
+    //   }
+    //   photoManager.lookup(d.id, location, api)
+    // }
     t[d.id] = d;
     return t
   }, {})
