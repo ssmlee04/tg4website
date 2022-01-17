@@ -28,7 +28,7 @@ app.get( '/*', ( req, res ) => {
 
 var httpServer = http.createServer(app);
 
-httpServer.listen(3005);
+httpServer.listen(3000);
 
 httpServer.on( 'upgrade', ( req, socket, head ) => {
   apiProxy.ws( req, socket, head );
