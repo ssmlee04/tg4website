@@ -39,20 +39,20 @@ process.on('uncaughtException', function(e){
 });
 
 const host = process.env.REACT_APP_MEDIA_HOST || '';
+const channelUsername = process.env.REACT_APP_TG_CHANNEL_USERNAME || 'earningsfly';
 
 function htmlTemplate() {
   return `
         <!DOCTYPE html>
         <html lang="en-US">
         <head>
-            <link rel="stylesheet" type="text/css" href="${host}/app.css" />
         </head>
 
         <body>
             <script data-cfasync="false" src="${host}/app.bundle.js"></script>
             <script data-cfasync="false" src="${host}/vendors.bundle.js"></script>
             <script type="text/javascript">
-               Tg4Web.init('earningsfly', '17349', '344583e45741c457fe1862106095a5eb');
+               Tg4Web.init('${channelUsername}', '17349', '344583e45741c457fe1862106095a5eb');
             </script>
         </body>
         </html>
