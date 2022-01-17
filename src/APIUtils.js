@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { timeout } from 'promise-timeout';
 
-const apiUrl = typeof window !== 'undefined' ? process.env.REACT_APP_TG_API_URL : 'http://localhost:3080/api';
+const apiUrl = typeof window !== 'undefined' ? process.env.REACT_APP_TG_API_URL : 'https://tg.tradeideashq.com/api';
 
 const checkStatus = response => {
   if ( response.status >= 200 && response.status <= 304 ) {
