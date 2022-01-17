@@ -133,6 +133,10 @@ export const getTelegramUser = ( ) => ( dispatch, getState ) => {
       type: 'TELEGRAM_USER_SET',
       payload: { user, userAccessHash: user.access_hash },
     } );
+  }).catch(err => {
+    dispatch( {
+      type: 'TELEGRAM_USER_SET_ERROR',
+    } );
   })
 };
 

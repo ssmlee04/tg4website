@@ -78,7 +78,7 @@ class ImMediaMessage extends React.Component {
     return (
       <a className='im_message_media'>
         <div className='im_message_photo_thumb'>
-          {url ? <Zoom><LazyLoad><img className='round-corner-5' src={ url } style={ { width, height } } /></LazyLoad></Zoom> : <div style={ { height }} />}
+          {url ? <Zoom><LazyLoad height={ height }><img className='round-corner-5' src={ url } style={ { width, height } } /></LazyLoad></Zoom> : <div style={ { height }} />}
         </div>
       </a>
 

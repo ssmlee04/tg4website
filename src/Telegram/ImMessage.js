@@ -38,11 +38,11 @@ function isUrl(s) {
 }
 
 const replaceUrls = (str) => {
-  return <React.Fragment>{str.replace(/\n/g, ' ').split(' ').map(token => {
+  return <React.Fragment>{str.replace(/\n/g, ' ').split(' ').map((token, i) => {
     if (isUrl(token)) {
-      return <a href={token} target='_blank'>{token}</a>
+      return <a key={i} href={token} target='_blank'>{token}</a>
     }
-    return <span>{token} </span>
+    return <span key={i}>{token} </span>
   })}</React.Fragment>
 }
 class ImMessage extends React.Component {
