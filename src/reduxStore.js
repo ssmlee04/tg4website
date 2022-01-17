@@ -50,14 +50,17 @@ export const initializeTelegram = (channelUsername, telegramApiId, telegramApiHa
     console.log(`country:`, result.country);
   });
 
-  // mtproto.updates.on('updates', message => {
-  //   const { updates } = message;
-  //   const update = updates && updates[0] || {}
+  mtproto.updates.on('updates', message => {
+    if (message.chats[0].username !== channelUsername) return;
+    const { updates } = message;
+    const messages = updates.filter(d => d._ === 'updateNewChannelMessage').map(d => d.message)
+    const users = message.users;
 
-  //   if (update._ === 'updateNewChannelMessage') {
-  //     const msg = update.message
-  //   }
-  // });
+    dispatch( {
+      type: 'TELEGRAM_API_GET_NEW_MESSAGES',
+      payload: { messages, users },
+    } );
+  });
 
   const api = {
     call(method, params, options = {}) {
@@ -429,7 +432,7 @@ export const loadSampleMessages = ( fn ) => ( dispatch, getState ) => {
   } );
 }
 
-export const getChannelMessagesFn = ( msgUsers, oldUsers, msgMessages, oldMessages, isAfter, api, dispatch, fn ) => {
+export const getChannelMessagesFn = ( msgUsers, oldUsers, msgMessages, oldMessages, isAfter, api ) => {
   const msgUsersWithImages = msgUsers.reduce((t, d) => {
     if (d.photo) {
       const location = {
@@ -490,14 +493,14 @@ export const getChannelMessages = ( isAfter, fn ) => ( dispatch, getState ) => {
       _: "inputPeerChannel"
     }
   }).then(msg => {
-    const { messages, users } = getChannelMessagesFn(msg.users, oldUsers, msg.messages, oldMessages, isAfter, api, dispatch, fn)
+    const { messages, users } = getChannelMessagesFn(msg.users, oldUsers, msg.messages, oldMessages, isAfter, api)
     const messagesOffsetEnd = messages[messages.length - 1].id
     const messagesOffsetStart = messages[0].id
     const hasNewMessages = hasNewMessagesOld || (isAfter && (oldMessages.length < messages.length))
 
     dispatch( {
       type: 'TELEGRAM_SET',
-      payload: { isSample: false, isLoadingMessages: false, hasNewMessages, messages, users: _merge(users, oldUsers), messagesOffsetStart, messagesOffsetEnd },
+      payload: { isSample: false, isLoadingMessages: false, hasNewMessages, messages, users, messagesOffsetStart, messagesOffsetEnd },
     } );
     if (fn) fn()
   })
@@ -508,6 +511,9 @@ const userReducer = ( state = {}, action ) => {
 };
 
 const telegramReducer = ( state = { isLoggedin: false, chat: {} }, action ) => {
+  const oldUsers = state.users;
+  const oldMessages = state.messages || [];
+  const api = state.api;
   switch ( action.type ) {
   case 'TELEGRAM_API_SET':
     return { ...state, ...action.payload };
@@ -515,6 +521,9 @@ const telegramReducer = ( state = { isLoggedin: false, chat: {} }, action ) => {
     return { ...state, ...action.payload };
   case 'TELEGRAM_SET':
     return { ...state, ...action.payload };
+  case 'TELEGRAM_API_GET_NEW_MESSAGES':
+    const { messages, users } = getChannelMessagesFn(action.payload.users, oldUsers, action.payload.messages, oldMessages, true, api)
+    return { ...state, messages, users, hasNewMessages: true };
   default: return state;
   }
 };

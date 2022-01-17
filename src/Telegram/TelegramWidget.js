@@ -73,12 +73,12 @@ class TelegramWidget extends React.Component {
     this.loadSampleMessages()
     this.props.getTelegramUser();
 
-    setInterval( () => {
-      const { chat } = this.props;
-      if ( chat ) {
-        this.props.getChannelMessages( true );
-      }
-    }, 10000 );
+    // setInterval( () => {
+    //   const { chat } = this.props;
+    //   if ( chat ) {
+    //     this.props.getChannelMessages( true );
+    //   }
+    // }, 10000 );
   }
 
   toggleChat() {
