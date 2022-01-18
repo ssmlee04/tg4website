@@ -21,8 +21,8 @@ Currently we only support group chats on your website. You need to make sure the
 You can add the javascript files to your head tag.
 
 ```
-<script src="https://tg4website.s3.amazonaws.com/js/vendors.bundle.js"></script>
-<script src="https://tg4website.s3.amazonaws.com/js/app.bundle.js"></script>
+<script src="https://dlp14zgm5vlk5.cloudfront.net/js/vendors.bundle.js"></script>
+<script src="https://dlp14zgm5vlk5.cloudfront.net/js/app.bundle.js"></script>
 <script type="text/javascript">
    Tg4Web.init('earningsfly', '17349', '344583e45741c457fe1862106095a5eb');
 </script>
