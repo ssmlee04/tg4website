@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import ImMediaMessage from './ImMediaMessage';
+import ImVideoMessage from './ImVideoMessage';
 import ImStickerMessage from './ImStickerMessage';
 import ImReplyMessage from './ImReplyMessage';
 
@@ -52,7 +53,7 @@ class ImMessage extends React.Component {
     const user = users[ message.from_id.user_id ] || {};
     const initial = user.last_name && user.first_name ? user.first_name[ 0 ] + user.last_name[ 0 ] : ( user.first_name && user.first_name[ 0 ] || 'User' );
     const name = user.first_name ? ( user.last_name ? `${ user.first_name } ${ user.last_name }` : user.first_name ) : user.last_name;
-
+    
     return (
       <div className='im_message_outer_wrap'>
         <div className='im_message_wrap clearfix' ng-switch="::historyMessage._ == 'messageService'">
@@ -89,6 +90,7 @@ class ImMessage extends React.Component {
 
                 {message.message ? <div className='im_message_text' style={ { overflowWrap: 'break-word' } }>{replaceUrls(message.message)}</div> : null}
                 {message.media && message.media.photo ? <ImMediaMessage users={ users } message={ message } /> : null}
+                {message.media && message.media.video ? <ImVideoMessage users={ users } message={ message } /> : null}
                 {message.media && message.media.document ? <ImStickerMessage users={ users } message={ message } /> : null}
                 <div className='im_message_sign' />
 

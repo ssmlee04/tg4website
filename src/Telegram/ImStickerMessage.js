@@ -27,10 +27,11 @@ class ImStickerMessage extends React.Component {
     //   id: [{id: id, _: 'inputMessageID'}]
     // })
 
+    this.setState( { width: 150, height: 150 } );
     const photo = message && message.media && message.media.document
     if (photo && photo._thumb) {
       // this.setState( { url: photo.imageUrl, width: photo._thumb._width, height: photo._thumb._height } );
-      this.setState( { url: photo.imageUrl, width: 100, height: 100, isWebp: (photo.imageUrl || '').indexOf('.webp') > -1 } );
+      this.setState( { url: photo.imageUrl, isWebp: (photo.imageUrl || '').indexOf('.webp') > -1 } );
       return;
     }
 
@@ -58,17 +59,16 @@ class ImStickerMessage extends React.Component {
       _: 'inputDocumentFileLocation',
     };
 
-    if (photo.mime_type === 'application/x-tgsticker') {
-      const url = `https://i.imgur.com/iNkyqhY.png`;
-      this.setState( { url, width: 50, height: 50 } );
-      return;
-    }
+    // if (photo.mime_type === 'application/x-tgsticker') {
+    //   const url = `https://i.imgur.com/iNkyqhY.png`;
+    //   this.setState( { url, width: 50, height: 50 } );
+    //   return;
+    // }
 
-    if (photo.mime_type === 'video/mp4') {
-      const url = `https://i.imgur.com/iNkyqhY.png`;
-      this.setState( { url, width: 50, height: 50 } );
-      return;
-    }
+    // if (photo.mime_type === 'video/mp4') {
+    //   // const url = `https://i.imgur.com/iNkyqhY.png`;
+    //   // this.setState( { url, width: 50, height: 50 } );
+    // }
 
     api.call( 'upload.getFile', {
       offset: 0,
@@ -77,14 +77,21 @@ class ImStickerMessage extends React.Component {
       precise: false,
       location,
     } ).then( d => {
-      const url = `data:image/jpg;base64,${ bytesToBase64( d.bytes ) }`;
-      this.setState( { url, width: 100, height: 100 } );
+      if (photo.mime_type === 'application/x-tgsticker') {
+
+      } else if (photo.mime_type === 'video/mp4') {
+        const url = `data:video/mp4;base64,${ bytesToBase64( d.bytes ) }`;
+        this.setState( { url, isVideo: true } );
+      } else {
+        const url = `data:image/jpg;base64,${ bytesToBase64( d.bytes ) }`;
+        this.setState( { url } );
+      }
       // this.setState( { url, width: photo.thumbs[ 1 ].w, height: photo.thumbs[ 1 ].h } );
     } );
   }
 
   render() {
-    const { url, width, height, isWebp } = this.state;
+    const { url, width, height, isWebp, isVideo } = this.state;
     if ( !url ) {
       return null;
     }
@@ -94,11 +101,14 @@ class ImStickerMessage extends React.Component {
     return (
       <a className='im_message_media'>
         <div className='im_message_photo_thumb'>
+          {isVideo ? <video autoPlay muted loop style={{ width, height }}>
+            <source src={url} type="video/mp4" />
+          </video> : null}
           {isWebp ? <picture>
             <source srcSet={ url } type="image/webp" />
             <img src={ url } src={ url } style={ { width, height } } />
-          </picture> : <LazyLoad><img src={ url } style={ { width, height } } /></LazyLoad>
-          }
+          </picture> : null}
+          {!isVideo && !isWebp ? <LazyLoad><img src={ url } style={ { width, height } } /></LazyLoad> : null}
         </div>
       </a>
 

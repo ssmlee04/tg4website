@@ -426,6 +426,7 @@ export const loadSampleMessages = ( fn ) => ( dispatch, getState ) => {
         date: d.msg._date,
         message: d.msg._text,
         media: {
+          video: d.msg._video,
           photo: d.msg._photo,
           document: d.msg._sticker,
         }
