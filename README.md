@@ -8,17 +8,17 @@ Demo: https://dlp14zgm5vlk5.cloudfront.net/
 
 # Prerequisite
 
-Currently we only support group chats on your website. You need to make sure the group is a public.
+Currently we only support group chats on your website. You need to make sure the group chat is public and has a username associated with it.
 
 # Installation
 
 * Go to: https://my.telegram.org/apps to get and app id and app hash.
-
-* Invite @tg4website into your group, then do `/initialize`.
+* Invite @tg4website into your group, give it the minimal admin permission, and then do `/initialize`.
+* Add the widgets to your website.
 
 # Usage
 
-You can add the javascript files to your head tag.
+You can add the scripts to your head tag.
 
 ```
 <script src="https://dlp14zgm5vlk5.cloudfront.net/js/vendors.bundle.js"></script>
