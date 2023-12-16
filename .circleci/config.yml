@@ -60,7 +60,7 @@ jobs:
             hash=$(git describe --exact-match --tags 2> /dev/null || git rev-parse HEAD)
             yarn install
             NODE_ENV=production npm run build
-            npm publish
+            # npm publish
 
             echo 'Building Static Website...'
             npm run build-widget
