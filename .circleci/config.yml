@@ -1,93 +1,21 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:15.14.0
-    working_directory: ~/app
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-tg4web-20201212-{{ checksum "package.json" }}
-      # - run:
-      #     name: install yarn
-      #     command: |
-      #       curl -o- -L https://yarnpkg.com/install.sh | bash
-      - run:
-          name: install application dependency
-          command: |
-            yarn install
-      - save_cache:
-          key: dependency-cache-tg4web-20201212-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-  # lint:
-  #   docker:
-  #     - image: circleci/node:15.14.0
-  #   working_directory: ~/app
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-tg4web-20201212-{{ checksum "package.json" }}
-  #     - run: ./node_modules/eslint/bin/eslint.js src
-  deploy:
-    docker:
-      - image: circleci/node:15.14.0
-    working_directory: ~/app
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-tg4web-20201212-{{ checksum "package.json" }}
-      - run:
-          name: Install system dependency
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            aws --version
-      - run:
-          name: Authenticate with npm registry
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/app/.npmrc
-      - run:
-          name: Build tarball and upload
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              BUCKET=deploy.tg4web.com
-            fi
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
 
-            cd ~/app
-            mkdir dist
-            rm index.js
-            hash=$(git describe --exact-match --tags 2> /dev/null || git rev-parse HEAD)
-            yarn install
-            NODE_ENV=production npm run build
-            npm publish
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/orb-intro/
+orbs:
+  node: circleci/node@4.7
 
-            echo 'Building Static Website...'
-            npm run build-widget
-            cd ~/app/dist
-            gzip app.bundle.js
-            mv app.bundle.js.gz app.bundle.js
-            gzip vendors.bundle.js
-            mv vendors.bundle.js.gz vendors.bundle.js
-            aws s3 cp app.bundle.js s3://tg4website/js/app.bundle.js --region us-east-1 --content-encoding gzip
-            aws s3 cp vendors.bundle.js s3://tg4website/js/vendors.bundle.js --region us-east-1 --content-encoding gzip
-
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  version: 2
-  build_and_test:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build
-      # - lint:
-      #     requires:
-      #       - build
-      # - test:
-      #     requires:
-      #       - build
-      - deploy:
-          requires:
-            - build
-            # - lint
-            # - test
-          filters:
-            branches:
-              only: [master]
+      - node/test:
+          # This is the node version to use for the `cimg/node` tag
+          # Relevant tags can be found on the CircleCI Developer Hub
+          # https://circleci.com/developer/images/image/cimg/node
+          version: '16.10'
+          # If you are using yarn, change the line below from "npm" to "yarn"
+          pkg-manager: npm
