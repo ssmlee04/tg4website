@@ -44,3 +44,4 @@ import 'tg4website/App.css';
 And that's all.
 
 p.s: the telegramApiId and telegramApiHash provided here are sample ids from Telegram. To use it in a live environment you would have to supply your own credentials.
+
