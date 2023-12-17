@@ -39,7 +39,7 @@ process.on('uncaughtException', function(e){
 });
 
 const host = process.env.REACT_APP_MEDIA_HOST || '';
-const channelUsername = process.env.REACT_APP_TG_CHANNEL_USERNAME || 'earningsfly';
+const channelUsername = process.env.REACT_APP_TG_CHANNEL_USERNAME || 'tg4website';
 
 function htmlTemplate() {
   return `
