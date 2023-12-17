@@ -52,7 +52,7 @@ class ImLogin extends React.Component {
                 <div className='im_history'>
 
                   <div name='mySendCodeForm' ng-if='!credentials.phone_code_hash' ng-submit='sendCode()'>
-                    <div className='login_form_head' my-i18n='login_sign_in'>Sign in <span className='red'>(You need to have a <a href='https://telegram.org/' target='_blank'>Telegram</a> account.)</span></div>
+                    <div className='login_form_head' my-i18n='login_sign_in'>Login to Telegram from your app</div>
                     {/*<div className='login_form_lead gray font-10' my-i18n='login_enter_number_description_md'>
                       Please choose your country and enter your phone number.
                     </div>*/}
