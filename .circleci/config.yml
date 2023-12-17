@@ -56,6 +56,7 @@ jobs:
 
             cd ~/app
             mkdir dist
+            . .env.prod
             rm index.js
             hash=$(git describe --exact-match --tags 2> /dev/null || git rev-parse HEAD)
             yarn install
