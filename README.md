@@ -2,7 +2,7 @@
 
 This helps you add Telegram group chats widget to your website. 
 
-Demo: https://dlp14zgm5vlk5.cloudfront.net/
+Demo: https://d3n1oh8bu9tp02.cloudfront.net/index.html
 
 ![](https://i.imgur.com/bPNSFCk.png)
 
@@ -25,8 +25,8 @@ You need to make sure the group chat is public and has a username with it.
 Place the following code between the <head></head> tags of your page:
 
 ```
-<script src="https://dlp14zgm5vlk5.cloudfront.net/js/vendors.bundle.js" type="text/javascript"></script>
-<script src="https://dlp14zgm5vlk5.cloudfront.net/js/app.bundle.js" type="text/javascript"></script>
+<script src="https://d3n1oh8bu9tp02.cloudfront.net/js/vendors.bundle.js" type="text/javascript"></script>
+<script src="https://d3n1oh8bu9tp02.cloudfront.net/js/app.bundle.js" type="text/javascript"></script>
 <script type="text/javascript">
    Tg4Web.init('earningsfly', '17349', '344583e45741c457fe1862106095a5eb');
 </script>
